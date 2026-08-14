@@ -885,9 +885,12 @@
                 </div>
                 <div class="fg fg-consent">
                   <label class="consent-label">
-                    <input id="f-privacy" name="privacy" type="checkbox" required>
+                    <input id="f-privacy" name="privacy" type="checkbox" required aria-describedby="consent-error">
                     <span>Acepto que Celdexia use estos datos para contactarme sobre mi solicitud.</span>
                   </label>
+                  <p id="consent-error" class="form-error" role="alert" hidden>
+                    Debes aceptar el consentimiento para poder enviar tu solicitud.
+                  </p>
                 </div>
                 <button type="submit" class="btn btn-primary btn-full" id="formBtn">
                   💬 Enviar por WhatsApp →

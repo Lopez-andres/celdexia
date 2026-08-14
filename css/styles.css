@@ -1391,9 +1391,19 @@ body.dark-mode #metodo .msub{color:rgba(255,255,255,.7)}
   min-height:1.05rem;
   margin-top:.1rem;
   padding:0;
+  -webkit-appearance:auto;
+  appearance:auto;
   accent-color:var(--green);
   cursor:pointer;
 }
+.form-error{
+  margin:.45rem 0 0 1.6rem;
+  color:#B42318;
+  font-size:.76rem;
+  font-weight:600;
+  line-height:1.4;
+}
+body.dark-mode .form-error{color:#FF9B91}
 body.dark-mode .fg select{
   background-image:linear-gradient(180deg,#111A2E 0%,#0D1628 100%),linear-gradient(135deg,transparent 50%,#79E3BE 50%),linear-gradient(225deg,transparent 50%,#79E3BE 50%);
 }

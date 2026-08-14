@@ -188,6 +188,8 @@ document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 function handleForm(e){
   e.preventDefault();
   const f = e.target;
+  const privacy = f.privacy;
+  const consentError = document.getElementById('consent-error');
   const nombre  = (f.nombre.value  || '').trim();
   const empresa = (f.empresa.value || '').trim();
   const tel     = (f.tel.value     || '').trim();
@@ -195,7 +197,19 @@ function handleForm(e){
   const area    = (f.area.value    || 'No especificada');
   const reto    = (f.reto.value    || '').trim() || 'No especificado';
 
-  if(!nombre || !empresa || !tel || !email || !f.area.value || !f.privacy.checked){
+  if(!privacy.checked){
+    privacy.setCustomValidity('Debes aceptar el consentimiento para poder enviar tu solicitud.');
+    privacy.setAttribute('aria-invalid', 'true');
+    if(consentError) consentError.hidden = false;
+    privacy.focus();
+    return;
+  }
+
+  privacy.setCustomValidity('');
+  privacy.setAttribute('aria-invalid', 'false');
+  if(consentError) consentError.hidden = true;
+
+  if(!nombre || !empresa || !tel || !email || !f.area.value){
     f.reportValidity();
     return;
   }
@@ -227,10 +241,23 @@ function handleForm(e){
     btn.classList.remove('is-sending');
     btn.disabled = false;
     f.reset();
+    privacy.setCustomValidity('');
+    privacy.setAttribute('aria-invalid', 'false');
+    if(consentError) consentError.hidden = true;
   }, 3500);
 }
 const contactForm = document.getElementById('contactForm');
-if(contactForm) contactForm.addEventListener('submit', handleForm);
+if(contactForm){
+  contactForm.addEventListener('submit', handleForm);
+  const privacy = contactForm.elements.privacy;
+  const consentError = document.getElementById('consent-error');
+  privacy?.addEventListener('change', () => {
+    const accepted = privacy.checked;
+    privacy.setCustomValidity('');
+    privacy.setAttribute('aria-invalid', accepted ? 'false' : 'true');
+    if(consentError) consentError.hidden = accepted;
+  });
+}
 
 /* ════════════════════════════════════════════════════════
    CHATBOT INTELIGENTE · GRUPO CELDEXIA SAS
