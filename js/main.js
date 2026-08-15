@@ -1,6 +1,5 @@
-document.documentElement.classList.add('js');
+document.documentElement.classList.replace('no-js', 'js');
 
-/* Safari puede ocultar el indicador de foco si no se activa la navegación por teclado. */
 document.addEventListener('keydown', e => {
   if(e.key === 'Tab') document.body.classList.add('keyboard-nav');
 });
@@ -16,15 +15,17 @@ const navLinks = document.getElementById('navLinks');
 const burger = document.getElementById('burger');
 
 function toggleNav(e){
-  if(e && e.stopPropagation) e.stopPropagation();
+  e?.stopPropagation?.();
   const services = document.getElementById('navServices');
   const servicesBtn = services ? services.querySelector('.nav-caret-btn') : null;
   const isOpen = navLinks.classList.toggle('open');
   burger.classList.toggle('open', isOpen);
   burger.setAttribute('aria-expanded', isOpen);
-  if(services && window.innerWidth <= 768){
-    services.classList.toggle('services-open', isOpen);
-    if(servicesBtn) servicesBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  // Abrir el menú principal no debe desplegar automáticamente los servicios.
+  // El submenú se controla únicamente desde su botón de tres puntos.
+  if(services && window.innerWidth <= 768 && !isOpen){
+    services.classList.remove('services-open');
+    if(servicesBtn) servicesBtn.setAttribute('aria-expanded', 'false');
   }
   document.body.style.overflow = isOpen ? 'hidden' : '';
   if(isOpen) navLinks.querySelector('a,button')?.focus();
@@ -71,7 +72,7 @@ function storeTheme(theme){
 }
 
 const savedTheme = getStoredTheme();
-const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
 applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
 
 const themeToggle = document.getElementById('themeToggle');
@@ -166,7 +167,7 @@ window.addEventListener('resize', () => {
   }
 });
 
-/* Escape → cerrar todo */
+/* Escape → cerrar navegación y chat */
 document.addEventListener('keydown', e => {
   if(e.key === 'Escape'){
     closeNav();
@@ -177,10 +178,14 @@ document.addEventListener('keydown', e => {
 /* ────────────────────────────────────────────────────────
    ANIMACIONES SCROLL
 ──────────────────────────────────────────────────────── */
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(el => { if(el.isIntersecting) el.target.classList.add('vis'); });
-}, { threshold: .08, rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+if ('IntersectionObserver' in window) {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(el => { if(el.isIntersecting) el.target.classList.add('vis'); });
+  }, { threshold: .08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+} else {
+  document.querySelectorAll('.fade-up').forEach(el => el.classList.add('vis'));
+}
 
 /* ────────────────────────────────────────────────────────
    FORMULARIO → WHATSAPP
@@ -270,6 +275,7 @@ const WEB_WEB      = 'https://web.celdexia.co/';
 const WEB_ACADEMY  = 'https://www.celdexia.com/inicio';
 const CAL_LINK     = 'https://calendar.app.google/tfaqs4YaaFquSDfQA';
 const WA_BASE      = 'https://wa.me/573174698050';
+const CHAT_STATE_KEY = 'celdexia-chat-state';
 
 /* Estado del chat */
 let chatOpen = false;
@@ -277,6 +283,9 @@ let chatStarted = false;
 let userName = '';
 let currentFlow = null;
 let navHistory = [];  // pila de estados anteriores para "Regresar"
+
+/* La conversación se reinicia al recargar la página, pero se conserva al cerrar el chat. */
+try{ localStorage.removeItem(CHAT_STATE_KEY); }catch(_err){}
 
 const msgsEl = document.getElementById('cpMsgs');
 const optsEl = document.getElementById('cpOpts');
@@ -613,15 +622,50 @@ function addMsg(text, type){
   b.className = 'msg-bubble';
   // Permitir negrita simple **texto**
   const html = text
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
   b.innerHTML = html;
   d.appendChild(b);
   msgsEl.appendChild(d);
   msgsEl.scrollTop = msgsEl.scrollHeight;
   return d;
+}
+
+function saveChatState(){
+  const messages = Array.from(msgsEl.querySelectorAll('.msg:not(#typing-indicator)'))
+    .map(message => ({
+      text: message.querySelector('.msg-bubble')?.textContent || '',
+      type: message.classList.contains('usr') ? 'usr' : 'bot'
+    }));
+  try{
+    localStorage.setItem(CHAT_STATE_KEY, JSON.stringify({
+      messages,
+      userName,
+      currentFlow,
+      navHistory
+    }));
+  }catch(_err){
+    /* El chat continúa en memoria si el almacenamiento está bloqueado. */
+  }
+}
+
+function restoreChatState(){
+  if(msgsEl.children.length > 0) return false;
+  try{
+    const saved = JSON.parse(localStorage.getItem(CHAT_STATE_KEY) || 'null');
+    if(!saved?.messages?.length) return false;
+    userName = saved.userName || '';
+    currentFlow = saved.currentFlow || null;
+    navHistory = Array.isArray(saved.navHistory) ? saved.navHistory : [];
+    saved.messages.forEach(message => addMsg(message.text, message.type));
+    chatStarted = true;
+    return true;
+  }catch(err){
+    console.warn('No se pudo restaurar la conversación de Celex.', err);
+    return false;
+  }
 }
 
 function showTyping(){
@@ -808,7 +852,7 @@ function handleOpt(opt){
         /* Mostrar Regresar si hay historial Y no estamos en start */
         setOpts(f.opts, opt.n !== 'start');
       }
-    }, 800 + Math.random() * 400);
+    }, 800 + (crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296) * 400);
   }, 250);
 }
 
@@ -818,7 +862,7 @@ function handleTextInput(){
   
   /* Primera entrada: capturar nombre */
   if(!userName){
-    const cleanName = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g,'').trim().split(' ')[0];
+    const cleanName = value.replaceAll(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g,'').trim().split(' ')[0];
     userName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1).toLowerCase() || 'amigo';
     addMsg(value, 'usr');
     inputEl.value = '';
@@ -834,7 +878,6 @@ function handleTextInput(){
         setOpts(f.opts);
       }, 900);
     }, 300);
-    return;
   }
 }
 
@@ -913,47 +956,50 @@ function startChat(){
   }, 350);
 }
 
-function toggleChat(){
-  chatOpen = !chatOpen;
+function getChatElements(){
   const panel = document.getElementById('chat-panel');
   const notif = document.getElementById('chat-notif');
   const tooltip = document.getElementById('chat-tooltip');
   const chatBtn = document.getElementById('chat-btn');
-  if(!panel || !notif || !tooltip) return;
+  return panel && notif && tooltip ? { panel, notif, tooltip, chatBtn } : null;
+}
 
-  if(chatOpen){
-    panel.classList.add('open');
-    panel.setAttribute('aria-hidden', 'false');
-    if(chatBtn) chatBtn.setAttribute('aria-expanded', 'true');
-    if(chatCloseBtn) chatCloseBtn.focus();
-    notif.classList.remove('show');
-    tooltip.classList.remove('show');
-    
-    if(!chatStarted){
-      startChat();
-    } else if(userName) {
-      /* Re-saludar a usuario que vuelve */
-      msgsEl.innerHTML = '';
-      optsEl.innerHTML = '';
-      hideInput();
-      navHistory = [];
-      currentFlow = 'start';
-      setTimeout(() => {
-        showTyping();
-        setTimeout(() => {
-          removeTyping();
-          addMsg(`¡Hola de nuevo, ${userName}! 😊 ¿En qué te puedo ayudar?`, 'bot');
-          const f = FLOWS.start();
-          setOpts(f.opts);
-        }, 700);
-      }, 300);
-    }
-  } else {
-    panel.classList.remove('open');
-    panel.setAttribute('aria-hidden', 'true');
-    if(chatBtn) chatBtn.setAttribute('aria-expanded', 'false');
-    if(chatBtn) chatBtn.focus();
-  }
+function restoreChatOptions(){
+  if(!restoreChatState()) return;
+  const flowFn = currentFlow && FLOWS[currentFlow];
+  if(flowFn) setOpts(flowFn().opts, navHistory.length > 0);
+}
+
+function openChat(elements){
+  const { panel, notif, tooltip, chatBtn } = elements;
+  panel.classList.add('open');
+  panel.showModal();
+  panel.setAttribute('aria-hidden', 'false');
+  chatBtn?.setAttribute('aria-expanded', 'true');
+  chatCloseBtn?.focus();
+  notif.classList.remove('show');
+  tooltip.classList.remove('show');
+
+  if(!chatStarted) startChat();
+  else restoreChatOptions();
+}
+
+function closeChat(elements){
+  const { panel, chatBtn } = elements;
+  saveChatState();
+  panel.classList.remove('open');
+  panel.close();
+  panel.setAttribute('aria-hidden', 'true');
+  chatBtn?.setAttribute('aria-expanded', 'false');
+  chatBtn?.focus();
+}
+
+function toggleChat(){
+  const elements = getChatElements();
+  if(!elements) return;
+  chatOpen = !chatOpen;
+  if(chatOpen) openChat(elements);
+  else closeChat(elements);
 }
 const chatBtn = document.getElementById('chat-btn');
 if(chatBtn) chatBtn.addEventListener('click', toggleChat);

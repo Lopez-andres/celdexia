@@ -1,0 +1,34 @@
+{
+  "name": "Grupo Celdexia SAS",
+  "short_name": "Celdexia",
+  "description": "Contabilidad, desarrollo web y formación en datos para PYMES en Colombia.",
+  "lang": "es-CO",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#0F2C4D",
+  "background_color": "#FFFFFF",
+  "icons": [
+    {
+      "src": "favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
