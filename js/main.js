@@ -219,6 +219,11 @@ function handleForm(e){
     return;
   }
 
+  if(!f.checkValidity()){
+    f.reportValidity();
+    return;
+  }
+
   const msg = [
     '🚀 *AGENDAR DIAGNÓSTICO — GRUPO CELDEXIA SAS*',
     '',
@@ -881,12 +886,14 @@ function handleTextInput(){
   }
 }
 
-inputEl.addEventListener('keydown', e => {
-  if(e.key === 'Enter'){
-    e.preventDefault();
-    handleTextInput();
-  }
-});
+if(inputEl){
+  inputEl.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      handleTextInput();
+    }
+  });
+}
 if(sendBtn) sendBtn.addEventListener('click', handleTextInput);
 
 /* ────────────────────────────────────────────────────────

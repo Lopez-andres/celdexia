@@ -1681,6 +1681,8 @@ body.dark-mode .chat-tooltip::after{border-top-color:#F8FAFC}
 
 #chat-panel{
   position:fixed;
+  top:auto;
+  left:auto;
   bottom:max(100px,calc(env(safe-area-inset-bottom,20px) + 100px));
   right:20px;
   margin:0;
@@ -2003,6 +2005,7 @@ body.dark-mode .cp-opt:focus-visible{
   }
   .nav-links.open{display:flex}
   .nav-links > li{display:flex;width:auto;max-width:100%;flex-direction:column;align-items:flex-end}
+  .nav-services{width:100%;}
   .nav-links > li > a{
     font-size:.95rem;font-weight:600;padding:.72rem .9rem;border-radius:10px;
     color:#F4F5F7;width:auto;min-height:42px;display:flex;align-items:center;
@@ -2018,7 +2021,7 @@ body.dark-mode .cp-opt:focus-visible{
   .nav-caret-btn{display:inline-flex;margin-left:.1rem;min-width:2.15rem;min-height:2.15rem}
   .nav-services .dept-row{
     position:static;display:none;flex-direction:column;align-items:stretch;
-    width:min(330px,calc(100vw - 3rem));max-width:calc(100vw - 3rem);
+    width:100%;min-width:0;max-width:100%;
     margin-left:auto;margin-right:0;padding:.35rem;opacity:0;visibility:hidden;
     pointer-events:none;background:var(--nav-bg);border:1px solid rgba(255,255,255,.12);
     border-radius:14px;box-shadow:0 12px 28px rgba(15,44,77,.16);
@@ -2026,6 +2029,7 @@ body.dark-mode .cp-opt:focus-visible{
   .nav-services.services-open .dept-row{display:flex;opacity:1;visibility:visible;pointer-events:auto}
   .nav-services .dept-row .dept-pill{width:100%;justify-content:initial;text-align:left;color:#F4F5F7;border-bottom-color:rgba(255,255,255,.1)}
   .nav-services .dept-row .dept-desc{color:rgba(244,245,247,.68)}
+  .nav-services .dept-row .dept-desc{overflow-wrap:anywhere;}
   .burger{display:flex;background:transparent;box-shadow:none;border:0}
 }
 
@@ -2160,8 +2164,9 @@ body.dark-mode .cp-opt:focus-visible{
     box-shadow:0 12px 28px rgba(15,44,77,.16);
     padding:.35rem;
     justify-content:flex-start;
-    width:min(330px,calc(100vw - 3rem));
-    max-width:calc(100vw - 3rem);
+    width:100%;
+    min-width:0;
+    max-width:100%;
     margin-left:auto;
     margin-right:0;
     overflow:hidden;
@@ -2200,6 +2205,8 @@ body.dark-mode .cp-opt:focus-visible{
     text-align:left;
     color:#F4F5F7;
     border-bottom-color:rgba(255,255,255,.1);
+    min-width:0;
+    overflow-wrap:anywhere;
   }
   .dept-pill{font-size:.78rem;padding:.65rem .7rem;min-height:0}
   .nav-services .dept-row .dept-desc{color:rgba(244,245,247,.68)}

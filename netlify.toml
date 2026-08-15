@@ -5,7 +5,7 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), usb=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=(), payment=(), midi=(), interest-cohort=()"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'sha256-/l8RcaNB8MHho/vs96s4ap8UspJKVkSybBrTscfyWKM=' 'sha256-djsI7ul3B3m7KdzbCZ7Nsn+0wERyt4WGuPwVBcPNg5k=' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; form-action 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self';"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'sha256-/l8RcaNB8MHho/vs96s4ap8UspJKVkSybBrTscfyWKM=' 'sha256-djsI7ul3B3m7KdzbCZ7Nsn+0wERyt4WGuPwVBcPNg5k=' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self'; font-src 'self'; img-src 'self' data: https://images.unsplash.com https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; form-action 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self';"
 
 [[headers]]
   for = "/css/*"
@@ -19,6 +19,11 @@
 
 [[headers]]
   for = "/assets/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/og-image-celdexia.jpg"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
@@ -41,3 +46,9 @@
   for = "/site.webmanifest"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/.well-known/security.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=UTF-8"
+    Cache-Control = "public, max-age=3600, must-revalidate"
