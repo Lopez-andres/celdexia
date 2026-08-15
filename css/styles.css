@@ -521,6 +521,8 @@ nav.scrolled{
   box-shadow:none;
 }
 
+.mobile-nav-cta{display:none}
+
 .nav-services:hover .nav-caret,
 .nav-services:focus-within .nav-caret{
   border-color:#79E3BE;
@@ -2199,6 +2201,16 @@ body.dark-mode .cp-opt:focus-visible{
   .nav-services.services-open .nav-caret{
     transform:rotate(225deg) translate(-1px,-1px);
   }
+  .nav-services .nav-caret,
+  .nav-services:not(.services-open):hover .nav-caret,
+  .nav-services:not(.services-open):focus-within .nav-caret{
+    transform:rotate(45deg) translateY(-2px);
+    transition:transform .35s cubic-bezier(.22,1,.36,1),border-color .2s ease;
+  }
+  .nav-services.services-open .nav-caret,
+  .nav-services.services-open:focus-within .nav-caret{
+    transform:rotate(225deg) translate(-1px,-1px);
+  }
   .nav-services .dept-row .dept-pill{
     width:100%;
     justify-content:initial;
@@ -2211,16 +2223,53 @@ body.dark-mode .cp-opt:focus-visible{
   .dept-pill{font-size:.78rem;padding:.65rem .7rem;min-height:0}
   .nav-services .dept-row .dept-desc{color:rgba(244,245,247,.68)}
 
+  body:not(.dark-mode) .nav-links{
+    background:var(--surface);
+    border-color:var(--line-2);
+    box-shadow:0 16px 34px rgba(15,44,77,.16);
+  }
+  body:not(.dark-mode) .nav-links > li > a,
+  body:not(.dark-mode) .nav-service-main .nav-service-link{
+    color:var(--navy);
+  }
+  body:not(.dark-mode) .nav-services .dept-row{
+    background:var(--surface);
+    border-color:var(--line-2);
+  }
+  body:not(.dark-mode) .nav-services .dept-row .dept-pill{
+    color:var(--navy);
+    border-bottom-color:var(--line-2);
+  }
+  body:not(.dark-mode) .nav-services .dept-row .dept-desc{color:var(--ink-2)}
+  body:not(.dark-mode) .nav-caret-btn .nav-caret{border-color:var(--navy)}
+  .nav-links .mobile-nav-cta{display:block;width:100%;margin-top:.25rem}
+  .nav-links .mobile-nav-cta .nav-cta{
+    display:flex;
+    width:100%;
+    min-height:42px;
+    align-items:center;
+    justify-content:center;
+    padding:.72rem .9rem;
+    border-radius:10px;
+    background:linear-gradient(135deg,var(--green),var(--green-deep));
+    color:#fff;
+    text-align:center;
+    white-space:normal;
+  }
+
   .burger{display:flex;background:transparent;box-shadow:none;border:0}
   .burger span{background:#F4F5F7}
 
-  #hero{padding:116px 0 50px}
+  #hero{padding:136px 0 50px}
   .hero-in{padding:0 1.2rem;gap:2.5rem}
   .hero-btns{gap:.6rem}
   .hero-btns .btn{flex:1 1 160px}
-  .hero-metrics{max-width:580px;gap:.6rem}
+  .hero-metrics{max-width:580px;gap:.75rem;margin-top:.35rem}
+  .hero-metric{padding:1rem .75rem}
 
   #quienes,#servicios,#contacto{padding:44px 0}
+  #quienes{padding-top:60px}
+  #quienes .q-text h2{width:calc(100% + 1rem);margin-left:-.5rem;max-width:none}
   #metodo{padding:54px 0}
 
   .q-grid{grid-template-columns:1fr;gap:2.2rem;align-items:stretch}
@@ -2271,19 +2320,21 @@ body.dark-mode .cp-opt:focus-visible{
   html{scroll-padding-top:84px}
   section{scroll-margin-top:84px}
   .nav-links{top:60px;right:.9rem;max-width:min(290px,calc(100vw - 1.8rem));max-height:calc(100vh - 72px);max-height:calc(100dvh - 72px)}
-  #hero{padding-top:116px}
+  #hero{padding-top:136px}
   .hero-in{padding:0 1rem;gap:2rem}
   .hero-h1{font-size:clamp(1.95rem,7.4vw,2.45rem);margin-bottom:.9rem;max-width:100%}
   .hero-sub{font-size:1rem;line-height:1.65;max-width:100%}
   .hero-btns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:.55rem}
   .hero-btns .btn{width:100%;min-width:0;padding:.85rem .55rem;font-size:.78rem;white-space:normal;line-height:1.2}
-  .hero-metrics{grid-template-columns:repeat(3,minmax(0,1fr));max-width:100%;gap:.4rem}
-  .hero-metric{padding:.8rem .85rem}
+  .hero-metrics{grid-template-columns:repeat(3,minmax(0,1fr));max-width:100%;gap:.55rem;margin-top:.35rem}
+  .hero-metric{padding:1rem .65rem}
   .hero-metric .num{font-size:1.2rem}
   .hero-metric .lab{font-size:.67rem;line-height:1.25}
   
   .wrap{padding:0 1rem}
   #quienes,#servicios,#contacto{padding:38px 0}
+  #quienes{padding-top:56px}
+  #quienes .q-text h2{width:calc(100% + 1.5rem);margin-left:-.75rem}
   #metodo{padding:48px 0}
   .cf{padding:1.4rem}
   .chs{grid-template-columns:1fr auto auto}
@@ -2318,7 +2369,7 @@ body.dark-mode .cp-opt:focus-visible{
   html{scroll-padding-top:80px}
   section{scroll-margin-top:80px}
   .nav-links{top:56px;right:.75rem;max-width:min(280px,calc(100vw - 1.5rem));max-height:calc(100vh - 68px);max-height:calc(100dvh - 68px)}
-  #hero{padding-top:108px}
+  #hero{padding-top:128px}
   .hero-h1{font-size:clamp(1.8rem,8vw,2.2rem)}
   .hero-sub{font-size:.96rem}
   .nav-logo-text{font-size:.88rem}
