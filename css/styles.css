@@ -521,7 +521,7 @@ nav.scrolled{
   box-shadow:none;
 }
 
-.mobile-nav-cta{display:none}
+.nav-links > li.mobile-nav-cta{display:none}
 
 .nav-services:hover .nav-caret,
 .nav-services:focus-within .nav-caret{
@@ -2242,7 +2242,7 @@ body.dark-mode .cp-opt:focus-visible{
   }
   body:not(.dark-mode) .nav-services .dept-row .dept-desc{color:var(--ink-2)}
   body:not(.dark-mode) .nav-caret-btn .nav-caret{border-color:var(--navy)}
-  .nav-links .mobile-nav-cta{display:block;width:100%;margin-top:.25rem}
+  .nav-links > li.mobile-nav-cta{display:block;width:100%;margin-top:.25rem}
   .nav-links .mobile-nav-cta .nav-cta{
     display:flex;
     width:100%;
